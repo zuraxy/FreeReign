@@ -130,6 +130,8 @@ Diagonal recommendations combine the meanings of their nearest axes.
 
 The exact recommendation algorithms may change later, but this directional mental model is central to the product.
 
+**Amendment (2026-11-26):** The directional metaphor stays, but what each axis means is now a pluggable "lens" selected by the route mode (see [ArchitectureDecisions.md](./ArchitectureDecisions.md), D11). The default engine preset is **Move-first**: N = mashup, E = wordplay/toneplay, W = smooth blend, S = cut/echo-out. The energy/exploration model above remains a valid alternative preset. A candidate appears only if a viable transition plan into it exists.
+
 ---
 
 ## Intended user experience

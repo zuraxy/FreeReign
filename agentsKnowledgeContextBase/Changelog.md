@@ -109,3 +109,22 @@ All notable changes are recorded by milestone and logical implementation slice. 
 - Production browser console: no warnings or errors on cold load.
 - Rendered inspection completed at 1440, 1024, 768, and 390 pixel widths.
 - Candidate selection, queue insertion, transition preparation, and route promotion verified in the browser.
+
+## 0.5.0-engine-architecture — 2026-11-26
+
+### Logical commit: docs: record engine architecture decisions
+
+#### Added
+
+- `ArchitectureDecisions.md` with twelve engine decisions: two-tier analysis, reels as recipes, algorithmic planner with a benchmark-gated optional LLM, Python segment renderer, primitive and move vocabulary, hybrid reel ID, the ~900-track MVP scope, WSL2 runtime, track store, lens-based Move-first compass, and tracer-bullet-first ordering.
+- Phase 2 engine milestones (ENG-001 to ENG-016) in `ImplementationPlan.md`.
+
+#### Changed
+
+- `ProjectState.md` next step now points to engine milestone M0.
+- Catalog reading order includes the decision log.
+- `.gitignore` excludes `songs/` and the future `library/` store.
+
+#### Validation performed
+
+- Documentation review only; no code changed.

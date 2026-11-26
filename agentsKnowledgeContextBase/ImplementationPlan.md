@@ -151,3 +151,117 @@ Status values: `Not started`, `In progress`, `Complete`, `Blocked`.
 - **Acceptance criteria:** Statuses are factual, validation is recorded, and audit findings have severity and disposition.
 - **Validation method:** Documentation review and relative-link check.
 - **Status:** Complete.
+
+---
+
+# Phase 2 — Engine (planned 2026-11-26)
+
+Architecture is fixed by [ArchitectureDecisions.md](./ArchitectureDecisions.md) (D1–D12). Task IDs use the `ENG-` prefix. Ordering follows D12: ingest, then a thin audible tracer bullet, then the reel benchmark, then clever moves.
+
+## M0 — Engine foundation and light analysis
+
+### ENG-001 — Scaffold `engine/`
+
+- **Objective:** Create a `uv` project (Python 3.11, lockfile) runnable in WSL2, with a CLI entry point (`rdj`), config for the library and store roots, lint/format/test tooling, and a README for WSL setup (ffmpeg, rubberband).
+- **Dependencies:** None.
+- **Acceptance criteria:** `uv run rdj --help` works in WSL2; tests run; the store root is configurable and gitignored.
+- **Status:** Not started.
+
+### ENG-002 — Ingest and track identity
+
+- **Objective:** Read `songs/manifest.csv` plus ID3 `WOAS` tags, dedupe by Spotify ID, register audio sources, compute content hashes, and tag MVP membership (D8).
+- **Dependencies:** ENG-001.
+- **Acceptance criteria:** 2,384 unique track IDs; MVP set flagged; music-video sources flagged; rerunning is idempotent.
+- **Status:** Not started.
+
+### ENG-003 — Analyzer framework and store
+
+- **Objective:** Implement the per-track folder store, the versioned analyzer stamp, stale detection and refresh, the `overrides.json` precedence rule, and a rebuildable SQLite + sqlite-vec index (D10).
+- **Dependencies:** ENG-002.
+- **Acceptance criteria:** Bumping an analyzer version re-runs only that analyzer; overrides survive re-analysis; the index rebuilds from JSON alone.
+- **Status:** Not started.
+
+### ENG-004 — Light-tier analyzers
+
+- **Objective:** Beats/downbeats (beat_this or equivalent), BPM, key (essentia), loudness (LUFS), structure segmentation, energy features, and style embeddings (Essentia Discogs-EffNet).
+- **Dependencies:** ENG-003.
+- **Acceptance criteria:** Runs on the MVP set locally; a spot check of 20 tracks shows plausible BPM, key, and downbeats.
+- **Status:** Not started.
+
+## M1 — Tracer bullet (D12)
+
+### ENG-005 — Plan schema, primitives, and `echo_out` / `cut`
+
+- **Objective:** Define the plan JSON schema (moves expanding into primitive automation, D6), implement the `echo_out` and `cut` templates, and build a phrase-aligned exit/entry point enumerator with rule scoring.
+- **Dependencies:** ENG-004.
+- **Acceptance criteria:** `rdj plan A B` emits valid ranked plans with templated explanations.
+- **Status:** Not started.
+
+### ENG-006 — Segment renderer
+
+- **Objective:** Render the transition segment from a plan (pedalboard FX, Rubber Band stretch with a ramp back to native tempo, loudness matching), and emit the stitch points for A and B.
+- **Dependencies:** ENG-005.
+- **Acceptance criteria:** `rdj mix A B` writes a segment plus a preview WAV of the full A tail → segment → B head with no clicks or level jumps.
+- **Status:** Not started.
+
+### ENG-007 — Minimal API and `ApiMusicEngine`
+
+- **Objective:** Build a FastAPI service exposing just enough of the `MusicEngine` contract to load a session, plan the next track, and serve the audio and segment. Add a frontend `ApiMusicEngine` and real Web Audio gapless playback behind a flag.
+- **Dependencies:** ENG-006, the existing UI-006 contract.
+- **Acceptance criteria:** One real pair plays end-to-end in the existing UI with an audible `echo_out` transition; mock mode still works.
+- **Status:** Not started.
+
+## M2 — Reel benchmark (D3, D7)
+
+### ENG-008 — Reel identification and review
+
+- **Objective:** Caption parsing plus stem-based tempo-invariant matching proposes reel → track matches, a small review UI captures confirmations, and the missing-songs list is exported.
+- **Dependencies:** ENG-004, plus stems for the reels (short enough to separate locally).
+- **Status:** Not started.
+
+### ENG-009 — Recipe extraction and benchmark harness
+
+- **Objective:** Align confirmed reels against library tracks, emit recipes in the plan schema, and build a recreation benchmark (planner vs. recipe) plus the per-stem residual coverage metric (D6).
+- **Dependencies:** ENG-008, ENG-006.
+- **Status:** Not started.
+
+## M3 — Heavy tier and signature moves
+
+### ENG-010 — Portable heavy-tier batch job
+
+- **Objective:** Make the heavy tier a resumable batch command (`rdj analyze --tier heavy`) that runs on the collaborator's RTX 4060 laptop under WSL2 + CUDA (cloud container as fallback). It produces Demucs stems and WhisperX word-timestamped lyrics for the MVP set as separate sequential passes, then exports `library/` artifacts that merge back into the main store.
+- **Acceptance criteria:** A 10-track benchmark run reports per-track time and VRAM peak; the job resumes after interruption; merged outputs pass stale checks on the main machine.
+- **Status:** Not started.
+
+### ENG-011 — Lyric/phoneme index and `wordplay_cut` / `toneplay_cut`
+
+- **Objective:** Build a word and rhyme index plus vocal pitch analysis; implement both templates; measure them on the benchmark.
+- **Status:** Not started.
+
+## M4 — Product wiring
+
+### ENG-012 — Lenses, presets, and the plan-gated compass
+
+- **Objective:** Implement the lens interface, the Move-first and Time Machine presets, retrieval, light-tier plan estimates, octant placement, diversity rules, and the mashability pair table (D11).
+- **Status:** Not started.
+
+### ENG-013 — Feedback capture
+
+- **Objective:** Persist thumbs up/down, skips, and selections against the plans that produced them, as the long-term reward signal.
+- **Status:** Not started.
+
+## M5 — Mashups and learning
+
+### ENG-014 — `blend` + `loop_extend`, then `vocal_over`
+
+- **Status:** Not started.
+
+### ENG-015 — Ranker v1
+
+- **Objective:** Train a small ranker on recipe positives, near-miss negatives, and feedback; it must beat the rule scorer on the benchmark to replace it.
+- **Status:** Not started.
+
+### ENG-016 — LLM judge experiment (D4)
+
+- **Objective:** Local Qwen/Llama or the Groq free tier reranks the top-K plans; it ships only if it beats ENG-015 on the benchmark.
+- **Status:** Not started.

@@ -141,3 +141,96 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Local reference media (downloaded Instagram reels, MP3s, metadata) - never commit
+/reels/
+
+# Local music library and derived analysis store - never commit
+/songs/
+/library/
+
+# ---------------------------------------------------------------------------
+# Route DJ engine (Python, engine/) - see agentsKnowledgeContextBase/ArchitectureDecisions.md
+# ---------------------------------------------------------------------------
+
+# Copyrighted audio/video anywhere in the repo (safety net beyond the folders above).
+# Small hand-made test fixtures can be re-included explicitly with a "!" rule.
+*.mp3
+*.flac
+*.wav
+*.aiff
+*.aif
+*.ogg
+*.opus
+*.m4a
+*.aac
+*.wma
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.m3u
+*.m3u8
+
+# Engine outputs: rendered segments/mixes, reel benchmark artifacts, exports
+/renders/
+/engine/renders/
+/engine/out/
+/engine/benchmarks/runs/
+*.rdjmix
+
+# Analysis indexes and local databases (rebuildable from library/ JSON)
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# ML model weights, checkpoints, and download caches
+*.pt
+*.pth
+*.th
+*.ckpt
+*.safetensors
+*.onnx
+*.pb
+*.h5
+*.tflite
+/models/
+/engine/models/
+.cache/
+hf_cache/
+torch_cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+.venv/
+venv/
+.python-version.local
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyright/
+.ipynb_checkpoints/
+.hypothesis/
+htmlcov/
+.coverage.*
+
+# Spreadsheets exported from the library (personal data; inventory lives with the media)
+*.xlsx
+
+# OS and editor noise
+Thumbs.db
+desktop.ini
+.DS_Store
+*:Zone.Identifier
+.idea/
+*.swp
+
+# Claude Code local settings (may contain machine-specific permissions)
+.claude/settings.local.json

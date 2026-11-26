@@ -69,9 +69,13 @@ Product UI components → `RouteDJApp` controller and pure reducer/selectors →
 - Responsive inspection: 1440, 1024, 768, and 390 pixel widths reviewed; desktop/mobile page overflow resolved.
 - `npm audit --omit=dev`: reports three high-severity upstream transitive advisories; documented in the initial audit.
 
+## Engine phase (planned, not started)
+
+The engine architecture was decided on 2026-11-26. See [ArchitectureDecisions.md](./ArchitectureDecisions.md) (D1–D12) and the Phase 2 section of [ImplementationPlan.md](./ImplementationPlan.md). Nothing from it is implemented yet. Local inputs now exist: `songs/` (2,384 unique MP3 tracks, `manifest.csv`) and `reels/` (141 reference reels). Both are gitignored media.
+
 ## Recommended next step
 
-Run a focused usability study on directional comprehension, recommendation comparison, selection-to-queue behavior, and route advancement. Use the findings to finalize a first API-backed `MusicEngine` contract before beginning catalog or recommendation backend work.
+Begin engine milestone M0 (ENG-001 to ENG-004: scaffold `engine/` in WSL2, ingest, analyzer store, light-tier analysis), then the M1 tracer bullet. The frontend usability study remains open and can run in parallel.
 
 ## Intentionally unimplemented backend features
 
